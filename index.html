@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Email Generator - Step 1</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, textarea, select, button {
+      display: block; width: 100%; margin-top: 10px; padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Email Generator - Step 1</h2>
+
+  <label>Dataset ID:</label>
+  <input id="datasetId" />
+
+  <label>Dataset Name:</label>
+  <input id="datasetName" />
+
+  <label>Opsgenie Number:</label>
+  <input id="opsgenieNumber" />
+
+  <label>Session User:</label>
+  <input id="sessionUser" />
+
+  <label>Error Details:</label>
+  <textarea id="errorDetails"></textarea>
+
+  <label>Intake Info:</label>
+  <textarea id="intakeInfo"></textarea>
+
+  <label>Load Pattern:</label>
+  <textarea id="loadPattern"></textarea>
+
+  <label>Timestamp:</label>
+  <input id="timestamp" />
+
+  <label>Alert Type:</label>
+  <select id="alertType">
+    <option value="">-- Select --</option>
+    <option value="INTAKE_SERVER_ERROR">INTAKE_SERVER_ERROR</option>
+    <option value="Update_Workflow_Failure">Update_Workflow_Failure</option>
+    <option value="Insert_Workflow_Failure">Insert_Workflow_Failure</option>
+    <option value="LAKE_HOUSE_LOAD_FAILURE">LAKE_HOUSE_LOAD_FAILURE</option>
+    <option value="Dataset update Workflow failure">Dataset update Workflow failure</option>
+  </select>
+
+  <button onclick="generateAndGo()">Generate Email</button>
+
+  <script>
+    function generateAndGo() {
+      const data = {
+        datasetId: document.getElementById("datasetId").value,
+        datasetName: document.getElementById("datasetName").value,
+        opsgenieNumber: document.getElementById("opsgenieNumber").value,
+        sessionUser: document.getElementById("sessionUser").value,
+        errorDetails: document.getElementById("errorDetails").value,
+        intakeInfo: document.getElementById("intakeInfo").value,
+        loadPattern: document.getElementById("loadPattern").value,
+        timestamp: document.getElementById("timestamp").value,
+        alertType: document.getElementById("alertType").value
+      };
+
+      if (!data.datasetId || !data.datasetName || !data.opsgenieNumber || !data.alertType) {
+        alert("Please fill required fields");
+        return;
+      }
+
+      const subject = `ACTION REQUIRED: Failure alert ${data.opsgenieNumber} for ${data.datasetName} (${data.datasetId})`;
+
+      const body = `Hi Team,
+
+You are listed as the Technical/Business Stewards for "${data.datasetName}" (${data.datasetId}).
+
+I'm the on-call engineer supporting the data lake, and we received a "${data.alertType}" alert for your dataset.
+
+Error Info:
+${data.errorDetails}
+
+Session Info:
+${data.sessionUser}
+
+Intake Info:
+${data.intakeInfo}
+
+Load Pattern:
+${data.loadPattern}
+
+Timestamp:
+${data.timestamp}
+
+Best Regards,
+Rajath N Prasad
+DevOps Engg`;
+
+      // Save to sessionStorage to transfer to next page
+      sessionStorage.setItem("emailSubject", subject);
+      sessionStorage.setItem("emailBody", body);
+
+      window.location.href = "send.html";
+    }
+  </script>
+</body>
+</html>

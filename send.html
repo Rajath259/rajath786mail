@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Send Email - Step 2</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, textarea, button {
+      display: block; width: 100%; margin-top: 10px; padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Send Email - Step 2</h2>
+
+  <label>To (Recipient Email):</label>
+  <input id="toEmail" type="email" placeholder="example@domain.com" />
+
+  <label>CC:</label>
+  <input id="ccEmail" type="email" placeholder="cc@domain.com" />
+
+  <label>Subject:</label>
+  <input id="subject" readonly />
+
+  <label>Message:</label>
+  <textarea id="body" readonly></textarea>
+
+  <button onclick="sendMail()">Send Email</button>
+
+  <script>
+    window.onload = function () {
+      document.getElementById("subject").value = sessionStorage.getItem("emailSubject");
+      document.getElementById("body").value = sessionStorage.getItem("emailBody");
+    };
+
+    function sendMail() {
+      const to = document.getElementById("toEmail").value;
+      const cc = document.getElementById("ccEmail").value;
+      const subject = encodeURIComponent(document.getElementById("subject").value);
+      const body = encodeURIComponent(document.getElementById("body").value);
+
+      if (!to) {
+        alert("Please enter recipient email.");
+        return;
+      }
+
+      const mailtoLink = `mailto:${to}?cc=${cc}&subject=${subject}&body=${body}`;
+      window.location.href = mailtoLink;
+    }
+  </script>
+</body>
+</html>
